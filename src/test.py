@@ -1,65 +1,70 @@
+# import cv2
+# import numpy as np
+# import os
+
+# # Load the image
+# image_path = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/grid_slices_3/row_0.png"  # Replace with your image path
+# image = cv2.imread(image_path)
+# gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# # Step 1: Remove empty margins
+# _, binary = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY_INV)
+# coords = cv2.findNonZero(binary)
+# x, y, w, h = cv2.boundingRect(coords)
+# cropped = image[y:y+h, x:x+w]
+
+# # Step 2: Detect vertical projection profile
+# gray_crop = cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
+# edges = cv2.Canny(gray_crop, 50, 150)
+# vertical_projection = np.sum(edges, axis=0)
+
+# # Step 3: Find local minimums (gaps between items)
+# threshold = 0.2 * np.max(vertical_projection)
+# gaps = np.where(vertical_projection < threshold)[0]
+
+# # Group close gaps
+# min_gap = 30
+# split_points = [gaps[0]]
+# for i in range(1, len(gaps)):
+#     if gaps[i] - split_points[-1] > min_gap:
+#         split_points.append(gaps[i])
+
+# # Final slice edges
+# slice_edges = [0] + split_points + [cropped.shape[1]]
+
+# # Create output directory
+# output_dir = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/grid_slices_3/slices"
+# os.makedirs(output_dir, exist_ok=True)
+
+# # Slice and save
+# for i in range(len(slice_edges) - 1):
+#     x1, x2 = slice_edges[i], slice_edges[i + 1]
+#     item_crop = cropped[:, x1:x2]
+#     if item_crop.shape[1] > 30:
+#         cv2.imwrite(f"{output_dir}/item_{i + 1}.png", item_crop)
+
+# print(f"Sliced items into '{output_dir}' folder.")
+
+
 import cv2
-import numpy as np
 import os
 
-def improved_row_slicing(image_path, output_folder="row_slices_projection_improved"):
-    os.makedirs(output_folder, exist_ok=True)
+# Load image
+image_path = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/grid_slices_1/row_1.png"  # Replace with your image path
+image = cv2.imread(image_path)
 
-    # Load and preprocess image
-    image = cv2.imread(image_path)
-    if image is None:
-        print("❌ Error loading image.")
-        return
+# Get image dimensions
+height, width, _ = image.shape
+num_items = 5  # You can auto-detect this later too
+item_width = width // num_items
 
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    _, binary = cv2.threshold(gray, 230, 255, cv2.THRESH_BINARY_INV)
+# Create output folder
+output_dir = "equal_slices"
+os.makedirs(output_dir, exist_ok=True)
 
-    # Compute horizontal projection
-    projection = np.sum(binary, axis=1)
-
-    # Smooth the projection to reduce noise (rolling average)
-    smoothed = np.convolve(projection, np.ones(15)/15, mode='same')
-
-    # Dynamic threshold: higher = stricter
-    threshold = np.max(smoothed) * 0.3
-
-    # Detect start and end points of content rows
-    rows = []
-    in_row = False
-    start = 0
-    for i, value in enumerate(smoothed):
-        if value > threshold and not in_row:
-            start = i
-            in_row = True
-        elif value <= threshold and in_row:
-            end = i
-            if end - start > 50:
-                rows.append((start, end))
-            in_row = False
-
-    # Apply padding to each row and clip within image bounds
-    row_paths = []
-    overlay = image.copy()
-    pad_top = 10
-    pad_bottom = 20
-
-    for idx, (y1, y2) in enumerate(rows):
-        y1p = max(0, y1 - pad_top)
-        y2p = min(image.shape[0], y2 + pad_bottom)
-
-        row_img = image[y1p:y2p, :]
-        row_path = os.path.join(output_folder, f"row_{idx}.png")
-        cv2.imwrite(row_path, row_img)
-        row_paths.append(row_path)
-
-        # Draw rectangle on overlay
-        cv2.rectangle(overlay, (0, y1p), (image.shape[1], y2p), (0, 255, 0), 2)
-
-    # Save overlay
-    cv2.imwrite(os.path.join(output_folder, "projection_overlay.png"), overlay)
-
-    print(f"✅ Sliced {len(rows)} rows with smoothing, thresholding, and padding.")
-
-
-# 🧪 Example usage:
-improved_row_slicing("/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/src/pics/listing.png", "prj_slices_3")
+# Slice into equal parts
+for i in range(num_items):
+    x1 = i * item_width
+    x2 = (i + 1) * item_width if i < num_items - 1 else width
+    item = image[:, x1:x2]
+    cv2.imwrite(f"{output_dir}/item_{i + 1}.png", item)

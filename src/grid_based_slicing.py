@@ -15,20 +15,24 @@ def merge_lines(lines, threshold=10):
     return [l[0] for l in merged]
 
 
-def slice_rows_by_visual_grid(image_path, output_folder="row_slices_grid"):
+def grid_slicing(image_path, output_folder="grid_img"):
     os.makedirs(output_folder, exist_ok=True)
 
     # Load image
     image = cv2.imread(image_path)
+    if image is None:
+        print("Error loading image.")
+        return
+    
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Step 1: Adaptive threshold to enhance contrast
+    # Step 1: Adaptive threshold (to enhance contrast)
     thresh = cv2.adaptiveThreshold(
         gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY_INV, 11, 2
     )
 
-    # Step 2: Hough line transform to find horizontal lines
+    # Step 2: Hough line transform (to find horizontal lines)
     lines = cv2.HoughLinesP(
         thresh,
         rho=1,
@@ -79,4 +83,4 @@ def slice_rows_by_visual_grid(image_path, output_folder="row_slices_grid"):
 
 
 if __name__ == "__main__":
-    slice_rows_by_visual_grid("/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/src/pics/listing.png", output_folder="grid_slices_3")
+    grid_slicing("/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/src/pics/listing.png", output_folder="grid_slices_3")
