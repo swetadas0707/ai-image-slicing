@@ -12,3 +12,6 @@ processing (OpenCV or AI-based models) to detect repeating patterns or boxes.
 4. Find contours / bounding boxes
 5. Filter bounding boxes (e.g., size, alignment)
 6. Crop and save individual item images
+
+
+Detailed Analysis and Findings: https://www.notion.so/R-D-AI-Image-Slicing-1ce456391e80809490a3fe69837540bb?pvs=4
