@@ -83,4 +83,4 @@ def grid_slicing(image_path, output_folder="grid_img"):
 
 
 if __name__ == "__main__":
-    grid_slicing("/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/src/pics/listing.png", output_folder="grid_slices_3")
+    grid_slicing("/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/rotated_output.jpg", output_folder="book")

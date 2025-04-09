@@ -1,5 +1,5 @@
 from grid_based_slicing import grid_slicing
-from projection_based_slicing import projection_slicing
+from projection_based_horizontal_slicing import projection_slicing
 
 def slice(img_path, page_type, output_folder):
     if page_type == "grid":
