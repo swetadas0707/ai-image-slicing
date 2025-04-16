@@ -1,3 +1,5 @@
+"""This script is designed to reparse a record from an image using the DeepSeek VL Chat Model API."""
+
 import asyncio
 import base64
 import json

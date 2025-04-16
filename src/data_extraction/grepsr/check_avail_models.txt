@@ -1,0 +1,5 @@
+1. Check on the server VPN
+2. Check if the server is up.
+    >> curl https://ml.int.grepsr.net/api/tags
+3. Check for available models 
+    >> curl https://ml.int.grepsr.net/v1/models
