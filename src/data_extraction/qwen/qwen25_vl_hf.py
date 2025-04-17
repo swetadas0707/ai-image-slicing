@@ -59,7 +59,7 @@ if __name__ == "__main__":
     # Example usage
     # screenshot_path = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/slices/grid_black_frame/medium/item_0.png"
     # screenshot_path = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/slices/grid_black_frame/bts_black_frame_1/item_4.png"
-    screenshot_path = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/slices/detail.jpeg"
+    screenshot_path = "/home/sweta/Projects/Pline/Experiment/AIScreenshotParsing/slices/detail1.jpeg"
     
     base64_image = encode_image_to_base64(screenshot_path)
     
@@ -76,14 +76,24 @@ if __name__ == "__main__":
     #     "stock_avail": ""
     # }
 
+    # input_record = {
+    #     "brand": "",
+    #     "price": "",
+    #     "color": "",
+    #     "manufacturer": "",
+    #     "asin": "",
+    #     "country_of_origin": "China",
+    #     "date_first_avail": "November 19, 2024"
+    # }
+
     input_record = {
         "brand": "",
         "price": "",
         "color": "",
         "manufacturer": "",
         "asin": "",
-        "country_of_origin": "China",
-        "date_first_avail": "November 19, 2024"
+        "weight": "",
+        "date_first_avail": ""
     }
 
     base_url = "https://router.huggingface.co/hyperbolic/v1"
